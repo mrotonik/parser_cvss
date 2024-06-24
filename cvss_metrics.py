@@ -50,3 +50,29 @@ ukrainian_labels = {
     'MA': 'Модиф. доступність', 'CR': 'Вимога конфіденційності', 'IR': 'Вимога цілісності',
     'AR': 'Вимога доступності'
 }
+
+metric_patterns = {
+    'AV': r'AV:([NPAL])',
+    'AC': r'AC:([LH])',
+    'PR': r'PR:([NLH])',
+    'UI': r'UI:([NR])',
+    'S': r'S:([UC])',
+    'C': r'C:([NLH])',
+    'I': r'I:([NLH])',
+    'A': r'A:([NLH])',
+    'E': r'E:([XUFPH])',
+    'RL': r'RL:([XUWTO])',
+    'RC': r'RC:([XURC])',
+    'MAV': r'MAV:([NAP])',
+    'MAC': r'MAC:([LH])',
+    'MPR': r'MPR:([NLH])',
+    'MUI': r'MUI:([NR])',
+    'MS': r'MS:([UC])',
+    'MC': r'MC:([NLH])',
+    'MI': r'MI:([NLH])',
+    'MA': r'MA:([NLH])',
+    'CR': r'CR:([XLMH])',
+    'IR': r'IR:([XLMH])',
+    'AR': r'AR:([XLMH])'
+}
+
