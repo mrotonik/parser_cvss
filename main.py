@@ -6,7 +6,7 @@ from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from docx import Document
 from docx.shared import Pt
-from cvss_metrics import metrics, descriptions, ukrainian_labels
+from cvss_metrics import metrics, descriptions, ukrainian_labels,metric_patterns
 from datetime import datetime
 def parse_cvss_vector(vector):
     """
@@ -20,35 +20,12 @@ def parse_cvss_vector(vector):
 
     vector = vector[len("CVSS:3.1/"):]
 
-    base_pattern = re.compile(
-        r'AV:([NPAL])\/AC:([LH])\/PR:([NLH])\/UI:([NR])\/S:([UC])\/C:([NLH])\/I:([NLH])\/A:([NLH])'
-    )
-    temporal_pattern = re.compile(
-        r'E:([XUFPH])\/RL:([XUWTO])\/RC:([XURC])'
-    )
-    environmental_pattern = re.compile(
-        r'MAV:([NAP])\/MAC:([LH])\/MPR:([NLH])\/MUI:([NR])\/MS:([UC])\/MC:([NLH])\/MI:([NLH])\/MA:([NLH])\/CR:([XLMH])\/IR:([XLMH])\/AR:([XLMH])'
-    )
+    all_metrics = {}
 
-    base_match = base_pattern.match(vector)
-    temporal_match = temporal_pattern.search(vector)
-    environmental_match = environmental_pattern.search(vector)
-
-    if not base_match:
-        raise ValueError("Invalid CVSS vector format")
-
-    base_metrics = {k: metrics[k][v] for k, v in zip(['AV', 'AC', 'PR', 'UI', 'S', 'C', 'I', 'A'], base_match.groups())}
-
-    temporal_metrics = {}
-    if temporal_match:
-        temporal_metrics = {k: metrics[k][v] for k, v in zip(['E', 'RL', 'RC'], temporal_match.groups())}
-
-    environmental_metrics = {}
-    if environmental_match:
-        environmental_metrics = {k: metrics[k][v] for k, v in zip(['MAV', 'MAC', 'MPR', 'MUI', 'MS', 'MC', 'MI', 'MA'],
-                                                                  environmental_match.groups())}
-
-    all_metrics = {**base_metrics, **temporal_metrics, **environmental_metrics}
+    for metric, pattern in metric_patterns.items():
+        match = re.search(pattern, vector)
+        if match:
+            all_metrics[metric] = metrics[metric][match.group(1)]
 
     return all_metrics
 
