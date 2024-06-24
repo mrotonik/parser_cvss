@@ -6,9 +6,10 @@ from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from docx import Document
 from docx.shared import Pt
-from cvss_metrics import metrics, descriptions, ukrainian_labels,metric_patterns
+from cvss_metrics import metrics, descriptions, ukrainian_labels, metric_patterns
 from datetime import datetime
 import os
+import docx
 def parse_cvss_vector(vector):
     """
     Парсинг CVSS вектора версії 3.1.
@@ -43,7 +44,12 @@ def get_metric_symbol_and_description(metric, value):
             description = descriptions.get(metric, {}).get(symbol, '')
             return description
     return 'Невідомий символ'
-
+def create_directory_if_not_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Directory '{directory}' created.")
+    else:
+        print(f"Directory '{directory}' already exists.")
 def plot_cvss_metrics_polar(metrics, frame):
     """
     Побудова полярної діаграми для метрик CVSS з підписами українською.
@@ -66,24 +72,32 @@ def plot_cvss_metrics_polar(metrics, frame):
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels([ukrainian_labels[label] for label in labels])
 
-    plt.title('Полярна діаграма CVSS метрик', size=15, color='blue', y=1.1)
+    #plt.title('Полярна діаграма CVSS метрик', size=15, color='blue', y=1.1)
+
+    # =PNG
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    to_file = re.sub(r'[^A-Za-z]', '', vector_entry.get())
+    create_directory_if_not_exists("image")
+    image_path = f'image/CVSS_Metrics_{current_time}_{to_file}.png'
+    create_directory_if_not_exists('data')
+    plt.savefig(image_path, bbox_inches='tight')
+    plt.close(fig)
 
     canvas = FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-def create_directory_if_not_exists(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-        print(f"Directory '{directory}' created.")
-    else:
-        print(f"Directory '{directory}' already exists.")
+    return image_path
 
-def create_word_table(metrics, vector):
+
+
+def create_word_table(metrics, vector, image_path):
     """
-    Створення Word документа з таблицею метрик CVSS.
+    Створення Word документа з таблицею метрик CVSS і вставленням графіка.
 
     :param metrics: Словник з метриками CVSS
+    :param vector: CVSS вектор у форматі рядка
+    :param image_path: Шлях до зображення графіка
     """
     doc = Document()
 
@@ -108,16 +122,11 @@ def create_word_table(metrics, vector):
         row_cells[1].text = ukrainian_labels.get(metric, '')
         row_cells[2].text = str(value)
         row_cells[3].text = get_metric_symbol_and_description(metric, value)
-    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    to_file=re.sub(r'[^A-Za-z]', '', vector)
+    doc.add_heading('Полярна діаграма', level=1)
+    doc.add_picture(image_path, width=docx.shared.Inches(6))
 
-    def create_directory_if_not_exists(directory):
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-            print(f"Directory '{directory}' created.")
-        else:
-            print(f"Directory '{directory}' already exists.")
-    create_directory_if_not_exists('data')
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    to_file = re.sub(r'[^A-Za-z]', '', vector)
     doc.save(f'data/CVSS_Metrics__{current_time}__{to_file}.docx')
 
 def on_submit():
@@ -129,8 +138,8 @@ def on_submit():
         metrics = parse_cvss_vector(vector)
         for widget in chart_frame.winfo_children():
             widget.destroy()
-        plot_cvss_metrics_polar(metrics, chart_frame)
-        create_word_table(metrics, vector)
+        image_path = plot_cvss_metrics_polar(metrics, chart_frame)
+        create_word_table(metrics, vector, image_path)
         messagebox.showinfo("Успіх", "CVSS вектор успішно розпарсений і Word документ створено!")
     except ValueError as e:
         messagebox.showerror("Помилка", str(e))
