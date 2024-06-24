@@ -19,14 +19,14 @@ def parse_cvss_vector(vector):
         raise ValueError("Invalid CVSS version, only CVSS:3.1 is supported")
 
     vector = vector[len("CVSS:3.1/"):]
-
+    parts = vector.split('/')
     all_metrics = {}
-
-    for metric, pattern in metric_patterns.items():
-        match = re.search(pattern, vector)
-        if match:
-            all_metrics[metric] = metrics[metric][match.group(1)]
-
+    for part in parts:
+        for metric, pattern in metric_patterns.items():
+            match = re.match(pattern, part)
+            if match:
+                all_metrics[metric] = metrics[metric][match.group(1)]
+                break
     return all_metrics
 
 def get_metric_symbol_and_description(metric, value):
