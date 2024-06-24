@@ -8,6 +8,7 @@ from docx import Document
 from docx.shared import Pt
 from cvss_metrics import metrics, descriptions, ukrainian_labels,metric_patterns
 from datetime import datetime
+import os
 def parse_cvss_vector(vector):
     """
     Парсинг CVSS вектора версії 3.1.
@@ -71,6 +72,13 @@ def plot_cvss_metrics_polar(metrics, frame):
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
+def create_directory_if_not_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Directory '{directory}' created.")
+    else:
+        print(f"Directory '{directory}' already exists.")
+
 def create_word_table(metrics, vector):
     """
     Створення Word документа з таблицею метрик CVSS.
@@ -102,7 +110,15 @@ def create_word_table(metrics, vector):
         row_cells[3].text = get_metric_symbol_and_description(metric, value)
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     to_file=re.sub(r'[^A-Za-z]', '', vector)
-    doc.save(f'CVSS_Metrics__{current_time}__{to_file}.docx')
+
+    def create_directory_if_not_exists(directory):
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            print(f"Directory '{directory}' created.")
+        else:
+            print(f"Directory '{directory}' already exists.")
+    create_directory_if_not_exists('data')
+    doc.save(f'data/CVSS_Metrics__{current_time}__{to_file}.docx')
 
 def on_submit():
     """
