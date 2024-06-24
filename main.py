@@ -7,7 +7,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from docx import Document
 from docx.shared import Pt
 from cvss_metrics import metrics, descriptions, ukrainian_labels
-
+from datetime import datetime
 def parse_cvss_vector(vector):
     """
     Парсинг CVSS вектора версії 3.1.
@@ -123,8 +123,9 @@ def create_word_table(metrics, vector):
         row_cells[1].text = ukrainian_labels.get(metric, '')
         row_cells[2].text = str(value)
         row_cells[3].text = get_metric_symbol_and_description(metric, value)
-
-    doc.save(f'CVSS_Metrics_.docx')
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    to_file=re.sub(r'[^A-Za-z]', '', vector)
+    doc.save(f'CVSS_Metrics__{current_time}__{to_file}.docx')
 
 def on_submit():
     """
