@@ -2,28 +2,35 @@
 
 # Словник метрик
 metrics = {
-    'AV': {'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2},
-    'AC': {'L': 0.77, 'H': 0.44},
-    'PR': {'N': 0.85, 'L': 0.62, 'H': 0.27},
-    'UI': {'N': 0.85, 'R': 0.62},
-    'S': {'U': 0.55, 'C': 0.85},
-    'C': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'I': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'A': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'MS': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'MC': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'MI': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'MA': {'N': 0.0, 'L': 0.22, 'H': 0.56},
-    'E': {'X': 1.0, 'U': 0.85, 'F': 0.97, 'P': 0.90, 'H': 1.0},
-    'RL': {'X': 1.0, 'U': 0.95, 'W': 0.96, 'T': 0.97},
-    'RC': {'X': 1.0, 'U': 0.92, 'R': 0.96, 'C': 1.0},
-    'MAV': {'N': 1.0, 'A': 0.6, 'P': 0.2},
-    'MAC': {'L': 0.77, 'H': 0.44},
-    'MPR': {'N': 0.85, 'L': 0.62, 'H': 0.27},
-    'MUI': {'N': 0.85, 'R': 0.62},
-    'CR': {'X': 1.0, 'L': 0.5, 'M': 0.75, 'H': 1.0},
-    'IR': {'X': 1.0, 'L': 0.5, 'M': 0.75, 'H': 1.0},
-    'AR': {'X': 1.0, 'L': 0.5, 'M': 0.75, 'H': 1.0}
+    # Base Metrics
+    'AV': {'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2},      # Attack Vector: Network, Adjacent, Local, Physical
+    'AC': {'L': 0.77, 'H': 0.44},                             # Attack Complexity: Low, High
+    'PR': {'N': 0.85, 'L': 0.62, 'H': 0.27},                  # Privileges Required: None, Low, High
+    'UI': {'N': 0.85, 'R': 0.62},                             # User Interaction: None, Required
+    'S':  {'U': 0.55, 'C': 0.85},                             # Scope: Unchanged, Changed
+    'C':  {'N': 0.0,  'L': 0.22, 'H': 0.56},                 # Confidentiality: None, Low, High
+    'I':  {'N': 0.0,  'L': 0.22, 'H': 0.56},                 # Integrity: None, Low, High
+    'A':  {'N': 0.0,  'L': 0.22, 'H': 0.56},                 # Availability: None, Low, High
+
+    # Temporal Metrics
+    'E':  {'X': 1.0, 'H': 1.0, 'F': 0.97, 'P': 0.94, 'U': 0.91},  # Exploit Code Maturity: Not Defined, High, Functional, Proof-of-Concept, Unproven
+    'RL': {'X': 1.0, 'U': 1.0, 'W': 0.97, 'T': 0.96, 'O': 0.95},  # Remediation Level: Not Defined, Unavailable, Workaround, Temporary Fix, Official Fix
+    'RC': {'X': 1.0, 'C': 1.0, 'R': 0.96, 'U': 0.92},              # Report Confidence: Not Defined, Confirmed, Reasonable, Unknown
+
+    # Environmental Metrics
+    'MAV': {'X': None, 'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2},  # Modified Attack Vector: [X, N, A, L, P] - X означає "Not Defined" (використовувати значення з базових AV)
+    'MAC': {'X': None, 'L': 0.77, 'H': 0.44},                       # Modified Attack Complexity: [X, L, H]
+    'MPR': {'X': None, 'N': 0.85, 'L': 0.62, 'H': 0.27},            # Modified Privileges Required: [X, N, L, H]
+    'MUI': {'X': None, 'N': 0.85, 'R': 0.62},                       # Modified User Interaction: [X, N, R]
+    'MS':  {'X': None, 'U': 0.55, 'C': 0.85},                       # Modified Scope: [X, U (Unchanged), C (Changed)] – якщо не визначено (X), використовується базовий S
+    'MC':  {'X': None, 'N': 0.0, 'L': 0.22, 'H': 0.56},             # Modified Confidentiality: [X, N, L, H]
+    'MI':  {'X': None, 'N': 0.0, 'L': 0.22, 'H': 0.56},             # Modified Integrity: [X, N, L, H]
+    'MA':  {'X': None, 'N': 0.0, 'L': 0.22, 'H': 0.56},             # Modified Availability: [X, N, L, H]
+
+    # Environmental Requirements
+    'CR':  {'X': 1.0, 'L': 0.5, 'M': 1.0, 'H': 1.5},               # Confidentiality Requirement: Not Defined, Low, Medium, High
+    'IR':  {'X': 1.0, 'L': 0.5, 'M': 1.0, 'H': 1.5},               # Integrity Requirement: Not Defined, Low, Medium, High
+    'AR':  {'X': 1.0, 'L': 0.5, 'M': 1.0, 'H': 1.5}                # Availability Requirement: Not Defined, Low, Medium, High
 }
 
 # Словник описів метрик
