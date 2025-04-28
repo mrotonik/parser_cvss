@@ -70,7 +70,7 @@ def plot_cvss_metrics_polar(metrics, frame):
     ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_yticklabels(['0.2', '0.4', '0.6', '0.8', '1.0'])
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels([ukrainian_labels[label] for label in labels])
+    ax.set_xticklabels(labels, fontdict={'fontsize': 36, 'fontname': 'Times New Roman'})
 
     #plt.title('Полярна діаграма CVSS метрик', size=15, color='blue', y=1.1)
 
